@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Regal – Healthcare Reimagined{% endblock %}
+{% block meta_description %}Book appointments with 500+ top-tier verified specialists instantly. Regal – Healthcare, beautifully simplified.{% endblock %}
+
+{% block extra_head %}
+<style>
+  .hero-bg {
+    background-image: linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.65) 100%), url("{% static 'img/hero.jpg' %}");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in-up { animation: fadeInUp 1s cubic-bezier(0.16,1,0.3,1) both; }
+  .animate-delay-200 { animation-delay: 0.2s; }
+  .animate-delay-400 { animation-delay: 0.4s; }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ===================== HERO ===================== -->
+<section class="hero-bg min-h-screen flex items-center justify-center text-center text-white px-4">
+  <div class="max-w-4xl">
+    <p class="animate-fade-in-up text-blue-200 font-semibold text-sm uppercase tracking-widest mb-4">Trusted by 50,000+ patients</p>
+    <h1 class="animate-fade-in-up animate-delay-200 text-5xl sm:text-6xl md:text-7xl font-extrabold leading-tight tracking-tight mb-6 text-white">
+      Healthcare,<br class="hidden sm:block"> Reimagined.
+    </h1>
+    <p class="animate-fade-in-up animate-delay-400 text-lg sm:text-xl text-blue-100 max-w-2xl mx-auto mb-10 leading-relaxed">
+      Book appointments with top-tier verified specialists in seconds. Zero paperwork, zero wait times, 100% you.
+    </p>
+    <div class="animate-fade-in-up animate-delay-400 flex flex-col sm:flex-row gap-4 justify-center">
+      <a href="{% url 'doctor_list' %}"
+         class="px-8 py-4 bg-white text-brand-700 font-bold rounded-2xl hover:bg-blue-50 transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 text-base">
+        Book an Appointment
+      </a>
+      <a href="{% url 'register' %}"
+         class="px-8 py-4 bg-white/10 text-white border border-white/30 font-semibold rounded-2xl backdrop-blur-sm hover:bg-white/20 transition-all duration-300 hover:scale-105 active:scale-95 text-base">
+        Join for Free
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TRUST BAR ===================== -->
+<section class="bg-white border-b border-gray-100 py-12 px-4">
+  <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+    {% for stat in trust_stats|default:"" %}{% endfor %}
+    <div>
+      <p class="text-4xl font-extrabold text-brand-600 tracking-tight">500+</p>
+      <p class="text-xs text-gray-400 font-semibold uppercase tracking-widest mt-1">Specialists</p>
+    </div>
+    <div>
+      <p class="text-4xl font-extrabold text-brand-600 tracking-tight">50k+</p>
+      <p class="text-xs text-gray-400 font-semibold uppercase tracking-widest mt-1">Happy Patients</p>
+    </div>
+    <div>
+      <p class="text-4xl font-extrabold text-brand-600 tracking-tight">24/7</p>
+      <p class="text-xs text-gray-400 font-semibold uppercase tracking-widest mt-1">Support</p>
+    </div>
+    <div>
+      <p class="text-4xl font-extrabold text-brand-600 tracking-tight">99%</p>
+      <p class="text-xs text-gray-400 font-semibold uppercase tracking-widest mt-1">Satisfaction</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FEATURES ===================== -->
+<section class="bg-gray-50 py-20 px-4">
+  <div class="max-w-7xl mx-auto">
+    <div class="text-center mb-16">
+      <h2 class="text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight">Why choose Regal?</h2>
+      <p class="text-gray-500 mt-4 text-lg max-w-2xl mx-auto">We rebuilt the entire healthcare experience from the ground up to be seamless, intelligent, and patient-first.</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      {% with features="." %}
+      <!-- Feature Card 1 -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-gray-100">
+        <div class="w-12 h-12 bg-brand-50 rounded-2xl flex items-center justify-center mb-5">
+          <svg class="w-6 h-6 text-brand-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Intelligent Scheduling</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Our smart algorithm finds the best time, automatically navigating around doctor breaks to eliminate double-booking entirely.</p>
+      </div>
+
+      <!-- Feature Card 2 -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-gray-100">
+        <div class="w-12 h-12 bg-purple-50 rounded-2xl flex items-center justify-center mb-5">
+          <svg class="w-6 h-6 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Top-Tier Doctors</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Every specialist on our platform undergoes a rigorous vetting process. View detailed profiles, experience, and transparent pricing.</p>
+      </div>
+
+      <!-- Feature Card 3 -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-gray-100">
+        <div class="w-12 h-12 bg-green-50 rounded-2xl flex items-center justify-center mb-5">
+          <svg class="w-6 h-6 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"/></svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Seamless Dashboards</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Manage your health from anywhere. Reschedule or cancel appointments with a single click from your beautiful dashboard.</p>
+      </div>
+
+      <!-- Feature Card 4 -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-gray-100">
+        <div class="w-12 h-12 bg-yellow-50 rounded-2xl flex items-center justify-center mb-5">
+          <svg class="w-6 h-6 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Smart Reminders</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Never miss an appointment. Receive automated email reminders 24 hours and 2 hours before your scheduled visit.</p>
+      </div>
+
+      <!-- Feature Card 5 -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-gray-100">
+        <div class="w-12 h-12 bg-red-50 rounded-2xl flex items-center justify-center mb-5">
+          <svg class="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Bank-Level Security</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">Your health data is sacred. We use industry-leading encryption and robust role-based access control to keep it private.</p>
+      </div>
+
+      <!-- Feature Card 6 -->
+      <div class="bg-white rounded-3xl p-8 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-gray-100">
+        <div class="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center mb-5">
+          <svg class="w-6 h-6 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <h3 class="text-xl font-bold text-gray-900 mb-3">Zero Wait Times</h3>
+        <p class="text-gray-500 text-sm leading-relaxed">By optimising clinic workflows, we ensure that when you book a slot, you actually see the doctor at that exact time.</p>
+      </div>
+      {% endwith %}
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA ===================== -->
+<section class="bg-gray-900 py-24 px-4 text-center">
+  <div class="max-w-3xl mx-auto">
+    <h2 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight mb-5">Ready to prioritize your health?</h2>
+    <p class="text-gray-400 text-lg mb-10 max-w-xl mx-auto">Join thousands of patients who have already upgraded their healthcare experience. Booking takes less than 2 minutes.</p>
+    <a href="{% url 'doctor_list' %}"
+       class="inline-block px-10 py-4 bg-brand-600 text-white font-bold rounded-2xl hover:bg-brand-700 transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-base">
+      Find a Doctor Now
+    </a>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="bg-gray-950 text-gray-400 py-16 px-4">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+      <div>
+        <div class="flex items-center gap-2 mb-4">
+          <img src="{% static 'images/regal_logo.png' %}" alt="Regal Logo" class="h-12 w-auto filter brightness-0 invert opacity-90">
+        </div>
+        <p class="text-sm leading-relaxed">The intelligent hospital appointment booking system designed for the modern world.</p>
+      </div>
+      <div>
+        <h4 class="text-white font-semibold text-sm mb-4 uppercase tracking-wider">Patients</h4>
+        <ul class="space-y-3 text-sm">
+          <li><a href="{% url 'doctor_list' %}" class="hover:text-white transition-colors">Book Appointment</a></li>
+          <li><a href="{% url 'doctor_list' %}" class="hover:text-white transition-colors">Find a Doctor</a></li>
+          <li><a href="{% url 'patient_dashboard' %}" class="hover:text-white transition-colors">Patient Dashboard</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white font-semibold text-sm mb-4 uppercase tracking-wider">Doctors</h4>
+        <ul class="space-y-3 text-sm">
+          <li><a href="{% url 'doctor_dashboard' %}" class="hover:text-white transition-colors">Doctor Dashboard</a></li>
+          <li><a href="#" class="hover:text-white transition-colors">Join the Network</a></li>
+          <li><a href="#" class="hover:text-white transition-colors">Provider Resources</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="text-white font-semibold text-sm mb-4 uppercase tracking-wider">Company</h4>
+        <ul class="space-y-3 text-sm">
+          <li><a href="#" class="hover:text-white transition-colors">About Us</a></li>
+          <li><a href="#" class="hover:text-white transition-colors">Privacy Policy</a></li>
+          <li><a href="#" class="hover:text-white transition-colors">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="border-t border-gray-800 pt-8 text-sm text-center">
+      &copy; {% now "Y" %} Regal. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+{% endblock %}

@@ -1,0 +1,319 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<!-- ===================== PRELOADER ===================== -->
+<style id="preloader-style">
+  #sc-preloader {
+    position: fixed; inset: 0; z-index: 9999;
+    background: #ffffff;
+    display: flex; align-items: center; justify-content: center;
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+  }
+  #sc-preloader.sc-done { opacity: 0; visibility: hidden; pointer-events: none; }
+  .preloader-logo {
+    animation: preloaderZoom 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    opacity: 0;
+  }
+  @keyframes preloaderZoom {
+    0%  { opacity: 0; transform: scale(0.3) rotate(-10deg); }
+    60% { opacity: 1; transform: scale(1.1) rotate(2deg); }
+    100%{ opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  .animate-fade-in     { animation: fadeIn 0.5s ease forwards; }
+  .animate-fade-in-up  { animation: fadeInUp 0.5s ease forwards; }
+  .delay-100 { animation-delay: 0.1s; opacity: 0; }
+  .delay-200 { animation-delay: 0.2s; opacity: 0; }
+  .delay-300 { animation-delay: 0.3s; opacity: 0; }
+  .delay-400 { animation-delay: 0.4s; opacity: 0; }
+</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard – Regal{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+            colors: {
+              brand: { 50:'#eff6ff',100:'#dbeafe',200:'#bfdbfe',500:'#3b82f6',600:'#0A66C2',700:'#1d4ed8',800:'#074b91' },
+              navy: { 900:'#0a0f1e', 800:'#0f172a', 700:'#1e293b', 600:'#334155' },
+            },
+          },
+        },
+      }
+    </script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <style>body { font-family: 'Inter', sans-serif; }</style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-gray-50 antialiased">
+
+<div class="flex h-screen overflow-hidden">
+
+<!-- PRELOADER HTML -->
+<div id="sc-preloader">
+  <div class="text-center">
+    <img src="{% static 'images/regal_logo.png' %}" alt="Regal" class="preloader-logo h-20 w-auto mx-auto drop-shadow-2xl">
+  </div>
+</div>
+
+    <!-- ===================== SIDEBAR ===================== -->
+    <aside id="sidebar"
+           class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-100 flex flex-col
+                  transform -translate-x-full lg:translate-x-0 lg:static lg:inset-auto
+                  transition-transform duration-300 ease-in-out shadow-sm lg:shadow-none">
+
+        <!-- Logo -->
+        <div class="h-16 flex items-center px-5 border-b border-gray-100 flex-shrink-0">
+            <a href="{% url 'home' %}" class="flex items-center gap-2.5">
+                <img src="{% static 'images/regal_logo.png' %}" alt="Regal Logo" class="h-16 w-auto drop-shadow-sm">
+            </a>
+        </div>
+
+        <!-- Nav Links -->
+        <nav class="flex-1 px-3 py-5 space-y-0.5 overflow-y-auto">
+            <p class="px-3 mb-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest">Menu</p>
+
+            {% if request.user.is_doctor %}
+                {% url 'doctor_dashboard' as doctor_dashboard_url %}
+                <a href="{{ doctor_dashboard_url }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 {% if request.path == doctor_dashboard_url %}bg-brand-50 text-brand-700{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    Overview
+                </a>
+
+                {% url 'doctor_appointments' as doc_appts_url %}
+                <a href="{{ doc_appts_url }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 {% if request.path == doc_appts_url %}bg-brand-50 text-brand-700{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    Appointments
+                </a>
+
+                {% url 'doctor_availability' as doc_avail_url %}
+                <a href="{{ doc_avail_url }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 {% if request.path == doc_avail_url %}bg-brand-50 text-brand-700{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    Availability
+                </a>
+
+                {% url 'doctor_profile_view' as doc_profile_url %}
+                <a href="{{ doc_profile_url }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 {% if request.path == doc_profile_url %}bg-brand-50 text-brand-700{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                    My Profile
+                </a>
+
+            {% elif request.user.is_patient %}
+                {% url 'patient_dashboard' as patient_dashboard_url %}
+                <a href="{{ patient_dashboard_url }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 {% if request.path == patient_dashboard_url %}bg-brand-50 text-brand-700{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    Overview
+                </a>
+
+                {% url 'doctor_list' as book_url %}
+                <a href="{{ book_url }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 {% if request.path == book_url %}bg-brand-50 text-brand-700{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    Book Appointment
+                </a>
+
+                {% url 'patient_appointments' as pat_appts_url %}
+                <a href="{{ pat_appts_url }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 {% if request.path == pat_appts_url %}bg-brand-50 text-brand-700{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    Appointments
+                </a>
+
+                {% url 'patient_profile' as pat_profile_url %}
+                <a href="{{ pat_profile_url }}" class="flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 {% if request.path == pat_profile_url %}bg-brand-50 text-brand-700{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+                    <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                    My Profile
+                </a>
+            {% endif %}
+                
+                <!-- Spacer to push logout to bottom if needed, or just append it -->
+                <div class="mt-8 border-t border-gray-100 pt-4">
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium rounded-xl transition-colors text-red-500 hover:bg-red-50">
+                            <svg class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                            Logout
+                        </button>
+                    </form>
+                </div>
+        </nav>
+
+        <!-- Bottom user card -->
+        <div class="border-t border-gray-100 p-4 flex-shrink-0">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-gray-100 flex items-center justify-center ring-2 ring-gray-200">
+                    {% if user_profile_photo %}
+                        <img src="{{ user_profile_photo }}" alt="Profile" class="w-full h-full object-cover">
+                    {% else %}
+                        <svg class="w-6 h-6 text-gray-400" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                        </svg>
+                    {% endif %}
+                </div>
+                <div class="min-w-0 flex-1">
+                    <p class="font-semibold text-gray-900 text-sm truncate leading-snug">{{ request.user.get_full_name|default:request.user.username }}</p>
+                    <p class="text-xs text-gray-400 truncate">{{ request.user.email }}</p>
+                    {% if request.user.is_doctor %}
+                        <span class="inline-block mt-1 text-[9px] font-extrabold uppercase tracking-widest bg-brand-100 text-brand-700 px-2 py-0.5 rounded-full">Doctor</span>
+                    {% elif request.user.is_patient %}
+                        <span class="inline-block mt-1 text-[9px] font-extrabold uppercase tracking-widest bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Patient</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Mobile overlay -->
+    <div id="sidebar-overlay" class="fixed inset-0 bg-black/40 z-30 hidden lg:hidden" onclick="closeSidebar()"></div>
+
+    <!-- ===================== MAIN ===================== -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+
+        <!-- Dashboard Topbar -->
+        <header class="h-16 bg-white border-b border-gray-100 px-4 sm:px-6 flex items-center gap-3 flex-shrink-0 z-20">
+
+            <!-- Mobile hamburger -->
+            <button onclick="openSidebar()" class="lg:hidden p-2 -ml-1 rounded-lg hover:bg-gray-100 transition-colors flex-shrink-0">
+                <svg class="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h10M4 18h7"/>
+                </svg>
+            </button>
+
+            <!-- Title -->
+            <div class="flex-1 min-w-0">
+                <p class="text-base font-bold text-gray-900 truncate leading-tight">{% block dashboard_title %}Dashboard{% endblock %}</p>
+                <p class="text-xs text-gray-400 hidden sm:block truncate">{% block dashboard_subtitle %}{% endblock %}</p>
+            </div>
+
+            <!-- Right: actions + profile -->
+            <div class="flex items-center gap-2 flex-shrink-0">
+                {% block dashboard_actions %}{% endblock %}
+
+                <!-- Profile dropdown -->
+                <div class="relative" id="profile-dd-wrap">
+                    <button onclick="toggleDD()"
+                            class="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-xl hover:bg-gray-50 border border-gray-100 transition-colors">
+                        <!-- Avatar circle in topbar -->
+                        <div class="w-7 h-7 rounded-full overflow-hidden flex-shrink-0 bg-gray-100 flex items-center justify-center">
+                            {% if user_profile_photo %}
+                                <img src="{{ user_profile_photo }}" alt="Me" class="w-full h-full object-cover">
+                            {% else %}
+                                <svg class="w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                                </svg>
+                            {% endif %}
+                        </div>
+                        <span class="hidden sm:block text-sm font-semibold text-gray-700 max-w-[110px] truncate">
+                            {{ request.user.get_full_name|default:request.user.username }}
+                        </span>
+                        <svg class="w-3.5 h-3.5 text-gray-400 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+
+                    <!-- Dropdown menu -->
+                    <div id="profile-dd"
+                         class="absolute right-0 mt-2 w-56 bg-white border border-gray-100 rounded-2xl shadow-xl z-50 hidden overflow-hidden">
+                        <div class="px-4 py-3 border-b border-gray-50">
+
+                            <p class="text-sm font-bold text-gray-800 truncate">{{ request.user.get_full_name|default:request.user.username }}</p>
+                            <p class="text-xs text-gray-400 truncate">{{ request.user.email }}</p>
+                            {% if request.user.is_doctor %}
+                                <span class="inline-block mt-1 text-[9px] font-extrabold uppercase tracking-widest bg-brand-100 text-brand-700 px-2 py-0.5 rounded-full">Doctor</span>
+                            {% elif request.user.is_patient %}
+                                <span class="inline-block mt-1 text-[9px] font-extrabold uppercase tracking-widest bg-green-100 text-green-700 px-2 py-0.5 rounded-full">Patient</span>
+                            {% endif %}
+                        </div>
+                        <div class="border-t border-gray-50 py-1">
+                            <form method="post" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition-colors">
+                                    <svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                                    Logout
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Content -->
+        <div class="flex-1 overflow-y-auto px-4 sm:px-6 py-6">
+            
+            {% block dashboard_content %}{% endblock %}
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}{% endblock %}
+<script>
+
+    function openSidebar()  { document.getElementById('sidebar').classList.remove('-translate-x-full'); document.getElementById('sidebar-overlay').classList.remove('hidden'); }
+
+    function closeSidebar() { document.getElementById('sidebar').classList.add('-translate-x-full');    document.getElementById('sidebar-overlay').classList.add('hidden'); }
+    function toggleDD()     { document.getElementById('profile-dd').classList.toggle('hidden'); }
+    document.addEventListener('click', function(e) {
+        const w = document.getElementById('profile-dd-wrap');
+        if (w && !w.contains(e.target)) document.getElementById('profile-dd').classList.add('hidden');
+    });
+
+    // Preloader dismiss — use sc-done (not .hidden which Tailwind overrides with display:none)
+    function dismissPreloader() {
+        const pl = document.getElementById('sc-preloader');
+        if (pl) {
+            pl.classList.add('sc-done');
+            // After transition completes, fully remove from layout
+            setTimeout(function() { pl.style.display = 'none'; }, 600);
+        }
+    }
+    // Dismiss after 1.4s regardless of load state
+    setTimeout(dismissPreloader, 1400);
+    // Also dismiss immediately when page fully loads (whichever comes first)
+    window.addEventListener('load', function() { setTimeout(dismissPreloader, 400); });
+
+</script>
+
+<!-- Toastify for Django messages -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+<script>
+    {% if messages %}
+        {% for message in messages %}
+        Toastify({
+            text: "{{ message }}",
+            duration: 4500,
+            close: true,
+            gravity: "top",
+            position: "right",
+            style: {
+                background: "{% if message.tags == 'error' %}linear-gradient(135deg,#ef4444,#dc2626){% elif message.tags == 'warning' %}linear-gradient(135deg,#f59e0b,#d97706){% else %}linear-gradient(135deg,#10b981,#059669){% endif %}",
+                borderRadius: "12px",
+                boxShadow: "0 10px 25px -5px rgba(0,0,0,0.15)",
+                fontFamily: "'Inter', sans-serif",
+                fontSize: "14px",
+                fontWeight: "600",
+                padding: "14px 18px",
+            }
+        }).showToast();
+        {% endfor %}
+    {% endif %}
+</script>
+
+</body>
+</html>
+
+

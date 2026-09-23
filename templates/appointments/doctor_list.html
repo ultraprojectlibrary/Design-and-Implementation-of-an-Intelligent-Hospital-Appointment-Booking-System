@@ -1,0 +1,154 @@
+{% extends 'dashboard_base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Book an Appointment – Regal{% endblock %}
+{% block profile_url %}{% if request.user.is_patient %}{% url 'patient_profile' %}{% else %}{% url 'doctor_profile_view' %}{% endif %}{% endblock %}
+
+{% block dashboard_title %}Book an Appointment{% endblock %}
+{% block dashboard_subtitle %}Find a specialist and book your session instantly.{% endblock %}
+
+
+
+{% block dashboard_content %}
+
+<!-- Beautiful Full-Width Search Bar -->
+<div class="mb-8">
+    <div class="bg-white rounded-3xl border border-gray-100 shadow-sm p-4 sm:p-6 relative overflow-hidden group">
+        <!-- Decorative bg accent -->
+        <div class="absolute top-0 right-0 -mr-16 -mt-16 w-48 h-48 bg-brand-50 rounded-full blur-3xl opacity-50 pointer-events-none group-hover:opacity-100 transition-opacity"></div>
+        <div class="absolute bottom-0 left-0 -ml-16 -mb-16 w-48 h-48 bg-indigo-50 rounded-full blur-3xl opacity-50 pointer-events-none group-hover:opacity-100 transition-opacity"></div>
+
+        <div class="relative z-10 flex flex-col sm:flex-row gap-4 items-center">
+            <div class="relative flex-1 w-full">
+                <svg class="w-6 h-6 text-brand-500 absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <input id="live-search" type="text" value="{{ search }}" placeholder="Search doctors by name or specialty..."
+                       class="w-full pl-12 pr-4 py-4 bg-gray-50/50 border border-gray-200 rounded-2xl text-base font-medium text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-4 focus:ring-brand-500/20 focus:border-brand-500 focus:bg-white transition-all shadow-inner">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Department Pills -->
+{% if departments %}
+<div class="mb-8 overflow-x-auto pb-2 scrollbar-hide">
+    <div class="flex items-center gap-2 w-max">
+        <a href="{% url 'doctor_list' %}"
+           class="px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors
+           {% if not selected_dept %}bg-gray-800 text-white shadow-md{% else %}bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+            All Departments
+        </a>
+        {% for dept in departments %}
+        <a href="{% url 'doctor_list' %}?department={{ dept.id }}"
+           class="px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors
+           {% if selected_dept == dept.id %}bg-gray-800 text-white shadow-md{% else %}bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+            {{ dept.name }}
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<!-- Results Info -->
+<div class="flex items-center justify-between mb-4">
+    <h2 class="text-base font-bold text-gray-900">Available Specialists</h2>
+    <p class="text-sm font-semibold text-brand-600 bg-brand-50 px-3 py-1 rounded-full" id="results-count">{{ doctors|length }} doctor{{ doctors|length|pluralize }}</p>
+</div>
+
+<!-- Grid (Stretches to end) -->
+<div id="doctor-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    {% for doctor in doctors %}
+    <div class="doctor-card bg-white rounded-3xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 flex flex-col overflow-hidden group"
+         data-name="{{ doctor.user.get_full_name|lower }}"
+         data-spec="{{ doctor.specialization|lower }} {{ doctor.department.name|lower }}">
+
+        <!-- Top banner with photo -->
+        <div class="relative h-24 bg-gradient-to-br from-brand-500 to-indigo-600">
+            <!-- decorative pattern -->
+            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white to-transparent"></div>
+            <!-- Avatar -->
+            <div class="absolute -bottom-8 left-6 w-20 h-20 rounded-2xl overflow-hidden bg-white p-1 shadow-lg group-hover:scale-105 transition-transform">
+                <div class="w-full h-full rounded-xl overflow-hidden bg-gray-100 flex items-center justify-center">
+                    {% if doctor.profile_photo %}
+                        <img src="{{ doctor.profile_photo.url }}" alt="Dr. {{ doctor.user.last_name }}" class="w-full h-full object-cover">
+                    {% else %}
+                        <svg class="w-10 h-10 text-gray-400" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                        </svg>
+                    {% endif %}
+                </div>
+            </div>
+            <span class="absolute top-4 right-4 bg-white/20 backdrop-blur-md border border-white/20 text-white text-[10px] font-bold uppercase tracking-wide px-2 py-1 rounded-lg">
+                {{ doctor.department.name }}
+            </span>
+        </div>
+
+        <div class="px-6 pt-12 pb-6 flex flex-col flex-1">
+            <h3 class="font-extrabold text-gray-900 text-lg leading-tight truncate">Dr. {{ doctor.user.first_name }} {{ doctor.user.last_name }}</h3>
+            <p class="text-brand-600 text-sm font-semibold mt-1 truncate">{{ doctor.specialization|default:doctor.department.name }}</p>
+
+            <div class="mt-5 space-y-2.5 mb-6">
+                <div class="flex items-center gap-3 text-sm text-gray-600">
+                    <div class="w-7 h-7 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <span class="font-medium">{{ doctor.years_of_experience }} Years Experience</span>
+                </div>
+                <div class="flex items-center gap-3 text-sm text-gray-600">
+                    <div class="w-7 h-7 rounded-lg bg-gray-50 flex items-center justify-center text-gray-400">
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    </div>
+                    <span class="font-medium">&#8358;{{ doctor.consultation_fee|intcomma }} / session</span>
+                </div>
+            </div>
+
+            <a href="{% url 'doctor_profile' doctor.id %}"
+               class="mt-auto block text-center py-3 px-4 bg-gray-900 text-white text-sm font-bold rounded-2xl hover:bg-brand-600 transition-colors shadow-md hover:shadow-xl hover:shadow-brand-500/20">
+                Book Appointment
+            </a>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-span-full text-center py-20">
+        <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-10 h-10 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900">No doctors found</h3>
+        <p class="text-gray-500 text-sm mt-1">Try selecting a different department.</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Empty state for search -->
+<div id="no-results" class="hidden text-center py-20">
+    <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+        <svg class="w-10 h-10 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+    </div>
+    <h3 class="text-lg font-bold text-gray-900">No results for "<span id="search-term"></span>"</h3>
+    <p class="text-gray-500 text-sm mt-1">Try a different name or specialty.</p>
+</div>
+
+{% block extra_js %}
+<script>
+const inp   = document.getElementById('live-search');
+const cards = document.querySelectorAll('.doctor-card');
+const noRes = document.getElementById('no-results');
+const count = document.getElementById('results-count');
+const term  = document.getElementById('search-term');
+
+inp.addEventListener('input', () => {
+    const q = inp.value.trim().toLowerCase();
+    let visible = 0;
+    cards.forEach(c => {
+        const match = !q || c.dataset.name.includes(q) || c.dataset.spec.includes(q);
+        c.style.display = match ? '' : 'none';
+        if (match) visible++;
+    });
+    count.textContent = visible + ' doctor' + (visible !== 1 ? 's' : '');
+    noRes.classList.toggle('hidden', visible > 0 || !q);
+    if (term) term.textContent = inp.value.trim();
+});
+</script>
+{% endblock %}
+
+{% endblock %}

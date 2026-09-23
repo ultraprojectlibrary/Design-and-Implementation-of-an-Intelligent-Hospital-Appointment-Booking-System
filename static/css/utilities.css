@@ -1,0 +1,52 @@
+/* General utility classes extracted from inline styles */
+.inline-form {
+    display: inline;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.mb-1 { margin-bottom: 1rem; }
+.mb-2 { margin-bottom: 2rem; }
+.mt-1 { margin-top: 1rem; }
+
+.text-danger { color: var(--danger); }
+.text-success { color: var(--success); }
+.text-warning { color: var(--warning); }
+
+.bg-danger { background-color: var(--danger); }
+.bg-success { background-color: var(--success); }
+
+.border-danger { border-color: var(--danger); }
+
+.alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: var(--border-radius);
+    text-align: center;
+    color: white;
+}
+.alert-error { background: var(--danger); }
+.alert-success { background: var(--success); }
+.alert-info { background: var(--primary); }
+
+.max-w-600 {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.p-2 { padding: 2rem; }
+.p-3 { padding: 3rem; }
+
+.fs-4 { font-size: 4rem; }
+.fs-5 { font-size: 5rem; }
+
+.flex-center {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.flex-1 { flex: 1; }

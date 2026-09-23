@@ -1,0 +1,39 @@
+{% extends 'dashboard_base.html' %}
+{% load static %}
+
+{% block title %}Booking Confirmed – Regal{% endblock %}
+{% block profile_url %}{% url 'patient_profile' %}{% endblock %}
+
+{% block dashboard_title %}Appointment Confirmed{% endblock %}
+{% block dashboard_subtitle %}Your booking was successful.{% endblock %}
+
+
+
+{% block dashboard_content %}
+<div class="max-w-xl mx-auto mt-10">
+    <div class="bg-white rounded-3xl border border-gray-100 shadow-sm p-10 text-center">
+        <!-- Success Icon -->
+        <div class="w-20 h-20 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-6">
+            <svg class="w-10 h-10 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+        </div>
+
+        <h1 class="text-2xl font-extrabold text-gray-900 mb-2">Booking Confirmed!</h1>
+        <p class="text-gray-500 text-sm mb-8">
+            Your appointment has been successfully scheduled. You can view or manage your appointments from your dashboard.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="{% url 'patient_dashboard' %}"
+               class="px-8 py-3 bg-brand-600 text-white text-sm font-semibold rounded-xl hover:bg-brand-700 transition-colors shadow-sm">
+                Go to Dashboard
+            </a>
+            <a href="{% url 'doctor_list' %}"
+               class="px-8 py-3 border border-gray-200 text-gray-700 text-sm font-semibold rounded-xl hover:bg-gray-50 transition-colors">
+                Book Another
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

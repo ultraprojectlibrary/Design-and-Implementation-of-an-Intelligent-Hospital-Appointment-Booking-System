@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; margin: 0; padding: 40px 0; color: #334155; }
+    .container { max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); }
+    .header { background: linear-gradient(135deg, #0A66C2 0%, #4338ca 100%); padding: 30px 40px; text-align: center; }
+    .header img { max-height: 50px; }
+    .content { padding: 40px; }
+    h1 { color: #0f172a; font-size: 24px; margin-top: 0; font-weight: 700; }
+    p { font-size: 16px; line-height: 1.6; margin-bottom: 24px; color: #475569; }
+    .details { background-color: #f1f5f9; border-radius: 12px; padding: 24px; margin-bottom: 30px; border: 1px solid #e2e8f0; }
+    .detail-row { margin-bottom: 12px; display: flex; }
+    .detail-label { font-weight: 600; width: 120px; color: #64748b; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .detail-value { font-weight: 700; color: #0f172a; }
+    .btn { display: inline-block; background-color: #0A66C2; color: #ffffff; font-weight: 600; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-size: 16px; text-align: center; }
+    .footer { text-align: center; padding: 30px; background-color: #f8fafc; color: #94a3b8; font-size: 14px; border-top: 1px solid #f1f5f9; }
+    .footer p { margin: 0 0 10px 0; font-size: 14px; color: #94a3b8; }
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <!-- You can use the generated logo here by hosting it or attaching it -->
+            <h2 style="color: white; margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.5px;">Regal</h2>
+        </div>
+        <div class="content">
+            <h1>{% if is_doctor %}New Appointment Booking{% else %}Booking Confirmed{% endif %}</h1>
+            <p>
+                {% if is_doctor %}
+                    Hello Dr. {{ doctor.user.last_name }},<br>You have a new appointment booking.
+                {% else %}
+                    Hello {{ patient.user.first_name }},<br>Your appointment has been booked successfully! Here are the details:
+                {% endif %}
+            </p>
+            
+            <div class="details">
+                {% if is_doctor %}
+                <div class="detail-row">
+                    <span class="detail-label">Patient</span>
+                    <span class="detail-value">{{ patient.user.get_full_name|default:patient.user.username }}</span>
+                </div>
+                {% else %}
+                <div class="detail-row">
+                    <span class="detail-label">Doctor</span>
+                    <span class="detail-value">Dr. {{ doctor.user.get_full_name }}</span>
+                </div>
+                {% endif %}
+                <div class="detail-row">
+                    <span class="detail-label">Date</span>
+                    <span class="detail-value">{{ appt_date|date:"l, F j, Y" }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Time</span>
+                    <span class="detail-value">{{ start_time|time:"g:i A" }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status</span>
+                    <span class="detail-value" style="color: #ca8a04;">Pending Confirmation</span>
+                </div>
+            </div>
+            
+            <p>
+                {% if is_doctor %}
+                    Please log in to your dashboard to review and confirm this appointment.
+                {% else %}
+                    You can manage your appointments or view updates directly from your dashboard.
+                {% endif %}
+            </p>
+            
+            <div style="text-align: center;">
+                <a href="{{ site_url }}" class="btn">Go to Dashboard</a>
+            </div>
+        </div>
+        <div class="footer">
+            <p>Regal Digital Healthcare Platform</p>
+            <p>This is an automated message, please do not reply.</p>
+        </div>
+    </div>
+</body>
+</html>
